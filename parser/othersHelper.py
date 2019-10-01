@@ -1,6 +1,7 @@
 import shutil
 import os.path
 
+
 def copy_without_headers(filename, input_dir, output_dir):
     input_filename = os.path.join(input_dir, filename)
     output_filename = os.path.join(output_dir, filename)
@@ -9,6 +10,7 @@ def copy_without_headers(filename, input_dir, output_dir):
     source_file.readline()
     target_file = open(output_filename, 'w')
     shutil.copyfileobj(source_file, target_file)
+
 
 def copy_other_files(ratings, tags, links, input_dir, output_dir):
     print('Copy ratings...')
