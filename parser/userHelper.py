@@ -21,7 +21,7 @@ def parse_file(reader, users_set):
 def parse_files(read_tags_file, read_ratings_file, users_file):
     tags_reader = csv.reader(read_tags_file, delimiter=',')
     ratings_reader = csv.reader(read_ratings_file, delimiter=',')
-    users_writer = csv.writer(users_file, delimiter=',')
+    users_writer = csv.writer(users_file, delimiter='#')
 
     # Parse file
     users_set = set({})
