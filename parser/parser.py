@@ -32,6 +32,7 @@ genres_file_output = os.path.join(output_dir, GENRES)
 movie_genres_file_output = os.path.join(output_dir, MOVIE_GENRES)
 users_file_output = os.path.join(output_dir, USERS)
 
-movieHelper.parse_movie_file(movies_file, movies_file_output, genres_file_output, movie_genres_file_output)
+movieHelper.parse_movie_file(
+    movies_file, movies_file_output, genres_file_output, movie_genres_file_output)
 userHelper.create_user_file(tags_file, ratings_file, users_file_output)
 othersHelper.copy_other_files(RATINGS, TAGS, LINKS, input_dir, output_dir)
