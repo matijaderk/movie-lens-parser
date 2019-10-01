@@ -7,7 +7,10 @@ def parse_genres(genres):
 def parse_name_and_year(name_year):
     name = name_year[0:-6]
     year = name_year[-5:-1]
-    return name, year
+    if(year.isdigit()):
+      return name, year
+
+    return name, '2000'
 
 def write_movie_genres(movie_id, movie_genres, writer):
     for genre in movie_genres:
@@ -24,8 +27,8 @@ def write_movie(movie_id, movie_name, movie_year, writer):
     writer.writerow([movie_id.strip(), movie_name.strip(), movie_year.strip()])
 
 def parse_file(genre_set, reader, movies_file, movie_genres_file):
-    movies_writer = csv.writer(movies_file, delimiter=',')
-    movie_genres_writer = csv.writer(movie_genres_file, delimiter=',')
+    movies_writer = csv.writer(movies_file, delimiter='#')
+    movie_genres_writer = csv.writer(movie_genres_file, delimiter='#')
 
     line_count = 0
     for row in reader:
@@ -50,7 +53,7 @@ def parse_file(genre_set, reader, movies_file, movie_genres_file):
 
 def parse_files(read_file, movies_file, genres_file, movie_genres_file):
     reader = csv.reader(read_file, delimiter=',')
-    genres_writer = csv.writer(genres_file, delimiter=',')
+    genres_writer = csv.writer(genres_file, delimiter='#')
 
     # Parse file
     genre_set = set({})
