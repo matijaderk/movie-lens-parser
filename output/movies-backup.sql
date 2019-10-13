@@ -11,59 +11,84 @@ SET row_security = off;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
+DROP TABLE IF EXISTS public.genres;
 CREATE TABLE public.genres (
-    id integer NOT NULL,
-    name text
+  id integer NOT NULL,
+  name varchar(255),
+  PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS public.links;
 CREATE TABLE public.links (
-    "movie-id" integer NOT NULL,
-    "imdb-id" text DEFAULT ''::text,
-    "tmdb-id" text
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+  movie_id integer NOT NULL,
+  imdb_id text DEFAULT ''::text,
+  tmdb_id text,
+  PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS public.movies;
 CREATE TABLE public.movies (
-    "movie-id" integer NOT NULL,
-    title text,
-    year integer
+  id integer NOT NULL,
+  title varchar(255),
+  release_date integer,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE public."movie-genre" (
-    "movie-id" integer,
-    "genre-id" integer
+DROP TABLE IF EXISTS public.movies_genres;
+CREATE TABLE public.movies_genres (
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+  movie_id integer,
+  genre_id integer,
+  PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS public.ratings;
 CREATE TABLE public.ratings (
-    "user-id" integer,
-    "movie-id" integer,
-    rating real,
-    "timestamp" text
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+  user_id integer,
+  movie_id integer,
+  rating real,
+  rated_at int,
+  PRIMARY KEY (id)
 );
 
 ALTER TABLE public.genres OWNER TO postgres;
 ALTER TABLE public.links OWNER TO postgres;
 ALTER TABLE public.movies OWNER TO postgres;
-ALTER TABLE public."movie-genre" OWNER TO postgres;
+ALTER TABLE public.movies_genres OWNER TO postgres;
 ALTER TABLE public.ratings OWNER TO postgres;
 
-ALTER TABLE ONLY public.genres
-    ADD CONSTRAINT genres_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.links
-    ADD CONSTRAINT links_pkey PRIMARY KEY ("movie-id");
-ALTER TABLE ONLY public.movies
-    ADD CONSTRAINT movies_pkey PRIMARY KEY ("movie-id");
+COPY public.genres(
+  id,
+  name
+) 
+FROM '/Users/mat/Developer/movie-lens-parser/output/genres.csv' DELIMITER '#' CSV;
 
-COPY public.genres(id, name) 
-FROM '/Path/To/Output/genres.csv' DELIMITER '#' CSV;
+COPY public.links(
+  movie_id,
+  imdb_id,
+  tmdb_id
+)
+FROM '/Users/mat/Developer/movie-lens-parser/output/links.csv' DELIMITER ',' CSV;
 
-COPY public.links("movie-id", "imdb-id", "tmdb-id")
-FROM '/Path/To/Output/links.csv' DELIMITER ',' CSV;
+COPY public.movies(
+  id,
+  title,
+  release_date
+)
+FROM '/Users/mat/Developer/movie-lens-parser/output/movies.csv' DELIMITER '#' CSV;
 
-COPY public.movies("movie-id", title, year)
-FROM '/Path/To/Output/movies.csv' DELIMITER '#' CSV;
+copy public.movies_genres(
+  movie_id,
+  genre_id
+)
+FROM '/Users/mat/Developer/movie-lens-parser/output/movie-genres.csv' DELIMITER '#' CSV;
 
-copy public."movie-genre"("movie-id", "genre-id")
-FROM '/Path/To/Output/movie-genres.csv' DELIMITER '#' CSV;
-
-copy public.ratings("user-id", "movie-id", rating, "timestamp")
-FROM '/Path/To/Output/ratings.csv' DELIMITER ',' CSV;
+copy public.ratings(
+  user_id,
+  movie_id,
+  rating,
+  rated_at
+)
+FROM '/Users/mat/Developer/movie-lens-parser/output/ratings.csv' DELIMITER ',' CSV;
